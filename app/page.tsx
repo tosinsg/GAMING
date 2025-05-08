@@ -1,10 +1,14 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import AuthStatus from "@/components/auth-status"
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
+      <div className="hidden">
+        <AuthStatus />
+      </div>
       {/* Hero Section */}
       <section className="hero-bg relative py-20 md:py-32">
         <div className="absolute inset-0 bg-black/70"></div>

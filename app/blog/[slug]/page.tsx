@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { getBlogPosts } from "@/lib/blog"
+import { CommentForm } from "@/components/comment-form"
 
 export async function generateStaticParams() {
   const posts = getBlogPosts()
@@ -81,6 +82,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                 </a>
               </div>
             </div>
+            <CommentForm blogId={params.slug} />
           </CardContent>
         </Card>
       </div>

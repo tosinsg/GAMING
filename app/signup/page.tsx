@@ -19,12 +19,22 @@ export default function SignupPage() {
     password: "",
     confirmPassword: "",
   })
+  const [communities, setCommunities] = useState({
+    discord: false,
+    whatsapp: false,
+    telegram: false,
+    facebook: false,
+  })
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleCommunityChange = (name: string) => {
+    setCommunities((prev) => ({ ...prev, [name]: !prev[name as keyof typeof prev] }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -124,7 +134,70 @@ export default function SignupPage() {
                   className="bg-gray-700 border-gray-600 text-white"
                 />
               </div>
-              <div className="flex items-center space-x-2">
+
+              <div className="space-y-3 pt-2">
+                <Label className="text-gray-300">Join our communities (optional)</Label>
+
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="discord"
+                      checked={communities.discord}
+                      onCheckedChange={() => handleCommunityChange("discord")}
+                    />
+                    <label
+                      htmlFor="discord"
+                      className="text-sm text-gray-300 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Discord Community
+                    </label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="whatsapp"
+                      checked={communities.whatsapp}
+                      onCheckedChange={() => handleCommunityChange("whatsapp")}
+                    />
+                    <label
+                      htmlFor="whatsapp"
+                      className="text-sm text-gray-300 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      WhatsApp Group
+                    </label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="telegram"
+                      checked={communities.telegram}
+                      onCheckedChange={() => handleCommunityChange("telegram")}
+                    />
+                    <label
+                      htmlFor="telegram"
+                      className="text-sm text-gray-300 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Telegram Channel
+                    </label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="facebook"
+                      checked={communities.facebook}
+                      onCheckedChange={() => handleCommunityChange("facebook")}
+                    />
+                    <label
+                      htmlFor="facebook"
+                      className="text-sm text-gray-300 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Facebook Group
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2 pt-2">
                 <Checkbox id="terms" required />
                 <label
                   htmlFor="terms"

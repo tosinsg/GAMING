@@ -30,29 +30,33 @@ export default function ContactPage() {
     setSubmitResult(null)
 
     try {
-      // For local development, we'll simulate a successful submission
-      // In a real app, you would send this data to your backend API
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formState),
+      })
 
-      // Store the message in localStorage for demonstration purposes
-      const messages = JSON.parse(localStorage.getItem("contactMessages") || "[]")
-      messages.push({
-        ...formState,
-        id: Date.now(),
-        timestamp: new Date().toISOString(),
-      })
-      localStorage.setItem("contactMessages", JSON.stringify(messages))
+      const data = await response.json()
 
-      setSubmitResult({
-        success: true,
-        message: "Your message has been sent successfully! We'll get back to you soon.",
-      })
-      setFormState({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      })
+      if (data.success) {
+        setSubmitResult({
+          success: true,
+          message: "Your message has been sent successfully! We'll get back to you soon.",
+        })
+        setFormState({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        })
+      } else {
+        setSubmitResult({
+          success: false,
+          message: data.error || "There was an error sending your message. Please try again later.",
+        })
+      }
     } catch (error) {
       setSubmitResult({
         success: false,
@@ -178,8 +182,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-gray-300 font-medium">Email</p>
-                      <a href="mailto:contact@ffarena.com" className="text-red-500 hover:text-red-400">
-                        contact@ffarena.com
+                      <a href="mailto:ffarena.zone@gmail.com" className="text-red-500 hover:text-red-400">
+                        ffarena.zone@gmail.com
                       </a>
                     </div>
                   </div>
@@ -197,38 +201,14 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-gray-300 font-medium">Phone</p>
-                      <a href="tel:+1234567890" className="text-red-500 hover:text-red-400">
-                        +1 (234) 567-890
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 h-6 w-6 text-red-500 mr-3">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-gray-300 font-medium">Address</p>
-                      <p className="text-gray-400">
-                        123 Gaming Street
-                        <br />
-                        Esports City, ES 12345
-                        <br />
-                        United States
-                      </p>
+                      <div className="space-y-1">
+                        <a href="tel:+2349041428571" className="text-red-500 hover:text-red-400 block">
+                          +234 904 1428 571
+                        </a>
+                        <a href="tel:+2348104220096" className="text-red-500 hover:text-red-400 block">
+                          +234 810 422 0096
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>

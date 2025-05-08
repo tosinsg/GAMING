@@ -9,14 +9,14 @@ const mockUsers = [
     name: "Demo User",
     email: "user@example.com",
     password: "password123", // Plain text for simplicity in local dev
-    image: "/images/avatars/avatar-1.png",
+    image: "/images/avatars/default.png",
   },
   {
     id: "2",
     name: "Admin User",
     email: "admin@example.com",
     password: "password123", // Plain text for simplicity in local dev
-    image: "/images/avatars/avatar-2.png",
+    image: "/images/avatars/default.png",
   },
 ]
 
@@ -33,44 +33,34 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        try {
-          if (!credentials?.email || !credentials?.password) {
-            return null
-          }
-
-          const user = mockUsers.find((user) => user.email === credentials.email)
-
-          if (!user) {
-            return null
-          }
-
-          // For local development, just do a simple password check
-          const isPasswordValid = credentials.password === user.password
-
-          if (!isPasswordValid) {
-            return null
-          }
-
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            image: user.image,
-          }
-        } catch (error) {
-          console.error("Auth error:", error)
+        if (!credentials?.email || !credentials?.password) {
           return null
+        }
+
+        const user = mockUsers.find((user) => user.email === credentials.email)
+
+        if (!user) {
+          return null
+        }
+
+        // For local development, just do a simple password check
+        const isPasswordValid = credentials.password === user.password
+
+        if (!isPasswordValid) {
+          return null
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
         }
       },
     }),
   ],
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
   pages: {
     signIn: "/login",
-    signOut: "/",
     error: "/auth/error",
   },
   callbacks: {
@@ -87,6 +77,6 @@ export const authOptions: NextAuthOptions = {
       return session
     },
   },
+  // Make sure to use the NEXTAUTH_SECRET environment variable
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === "development",
 }

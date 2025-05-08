@@ -18,13 +18,15 @@ const navItems = [
   { name: "Home", href: "/" },
   { name: "Blog", href: "/blog" },
   { name: "Gallery", href: "/gallery" },
+  { name: "Reviews", href: "/reviews" },
   { name: "Download", href: "/download" },
   { name: "Contact", href: "/contact" },
 ]
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
+  const loading = status === "loading"
 
   return (
     <nav className="sticky top-0 z-50 bg-black/90 backdrop-blur-sm border-b border-red-500/20">
@@ -47,7 +49,9 @@ export default function Navbar() {
             ))}
           </div>
           <div className="flex items-center md:space-x-4">
-            {session ? (
+            {loading ? (
+              <div className="h-8 w-8 rounded-full bg-gray-700 animate-pulse"></div>
+            ) : session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
@@ -104,62 +108,62 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-gray-900/95 backdrop-blur-sm">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="font-gaming text-gray-300 hover:text-red-500 block px-3 py-2 text-base font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
-            {!session ? (
-              <>
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-gray-900/95 backdrop-blur-sm">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              {navItems.map((item) => (
                 <Link
-                  href="/login"
+                  key={item.name}
+                  href={item.href}
                   className="font-gaming text-gray-300 hover:text-red-500 block px-3 py-2 text-base font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Login
+                  {item.name}
                 </Link>
-                <Link
-                  href="/signup"
-                  className="font-gaming text-red-500 hover:text-red-400 block px-3 py-2 text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Sign Up
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/profile"
-                  className="font-gaming text-gray-300 hover:text-red-500 block px-3 py-2 text-base font-medium"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Profile
-                </Link>
-                <button
-                  onClick={() => {
-                    setIsMenuOpen(false)
-                    signOut({ callbackUrl: "/" })
-                  }}
-                  className="font-gaming text-gray-300 hover:text-red-500 block px-3 py-2 text-base font-medium w-full text-left"
-                >
-                  Log out
-                </button>
-              </>
-            )}
+              ))}
+              {!session ? (
+                <>
+                  <Link
+                    href="/login"
+                    className="font-gaming text-gray-300 hover:text-red-500 block px-3 py-2 text-base font-medium"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="font-gaming text-red-500 hover:text-red-400 block px-3 py-2 text-base font-medium"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/profile"
+                    className="font-gaming text-gray-300 hover:text-red-500 block px-3 py-2 text-base font-medium"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setIsMenuOpen(false)
+                      signOut({ callbackUrl: "/" })
+                    }}
+                    className="font-gaming text-gray-300 hover:text-red-500 block px-3 py-2 text-base font-medium w-full text-left"
+                  >
+                    Log out
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </nav>
   )
 }

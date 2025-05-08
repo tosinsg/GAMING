@@ -1,11 +1,10 @@
 import type React from "react"
-import "./globals.css"
 import type { Metadata } from "next"
+import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { SessionProvider } from "@/components/providers/session-provider"
+import AuthProvider from "@/components/providers/session-provider"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
-import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "FF Arena - Free Fire Gaming Community",
@@ -20,13 +19,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Preload avatar images to prevent 404s */}
-        <link rel="preload" as="image" href="/images/avatars/avatar-1.png" />
-        <link rel="preload" as="image" href="/images/avatars/avatar-2.png" />
-      </head>
       <body className="min-h-screen bg-black text-white">
-        <SessionProvider>
+        <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="dark">
             <div className="flex min-h-screen flex-col">
               <Navbar />
@@ -34,7 +28,7 @@ export default function RootLayout({
               <Footer />
             </div>
           </ThemeProvider>
-        </SessionProvider>
+        </AuthProvider>
       </body>
     </html>
   )

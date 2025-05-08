@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import nodemailer from "nodemailer"
 
 export async function POST(request: Request) {
   try {
@@ -10,7 +11,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    // Create a message object with timestamp
+    // Create a transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    })
+
+    // Create message object with timestamp
     const messageObj = {
       name,
       email,
@@ -19,8 +29,30 @@ export async function POST(request: Request) {
       timestamp: new Date().toISOString(),
     }
 
-    // Instead of trying to write to the file system, just log the message
-    console.log("Received contact form submission:", messageObj)
+    // Email content
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: "ffarena.zone@gmail.com, tosinfreshman@gmail.com",
+      subject: `FF Arena Contact: ${subject}`,
+      text: `
+Name: ${name}
+Email: ${email}
+Subject: ${subject}
+Message: ${message}
+Timestamp: ${new Date().toISOString()}
+      `,
+      html: `
+<h2>New Contact Form Submission</h2>
+<p><strong>Name:</strong> ${name}</p>
+<p><strong>Email:</strong> ${email}</p>
+<p><strong>Subject:</strong> ${subject}</p>
+<p><strong>Message:</strong> ${message}</p>
+<p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+      `,
+    }
+
+    // Send email
+    await transporter.sendMail(mailOptions)
 
     // Return success response
     return NextResponse.json({ success: true })
